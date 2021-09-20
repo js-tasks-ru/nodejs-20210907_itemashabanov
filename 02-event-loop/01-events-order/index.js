@@ -21,3 +21,13 @@ setTimeout(() => {
 
   console.log('John');
 }, 10);
+
+/* 
+    Я изначально указывал такой порядок:
+    
+    Richard
+    John
+    Robert
+    James
+    Michael
+*/
