@@ -1,6 +1,7 @@
 const url = require('url');
 const http = require('http');
 const path = require('path');
+const fs = require('fs');
 
 const server = new http.Server();
 
@@ -12,7 +13,26 @@ server.on('request', (req, res) => {
 
   switch (req.method) {
     case 'GET':
+      if (pathname.includes('/')) {
+        res.statusCode = 400;
+        res.end("You can't request nested files");
 
+        return;
+      }
+
+      const readFileStream = fs.createReadStream(filepath);
+      readFileStream.pipe(res);
+      readFileStream.on('error', (error) => {
+        if (error.code === 'ENOENT') {
+          res.statusCode = 404;
+          res.end('There is no such file or directory');
+
+          return;
+        }
+
+        res.statusCode = 500;
+        res.end('Something went wrong');
+      });
       break;
 
     default:
